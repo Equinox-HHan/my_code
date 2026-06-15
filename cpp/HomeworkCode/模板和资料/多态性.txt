@@ -1,0 +1,98 @@
+多态性
+面向对象的多态性：专用多态：重载多态(函数的重载)，强制多态(整数和浮点数运算时整型隐含强制类型转换)
+			       通用多态：包含多态(虚函数)，参数多态(类模板)
+运算符重载：对已有运算符赋予多重含义，实质是函数重载
+1.重载为类的非静态成员函数：
+返回类型 类名::operator 运算符(形参表)
+{函数体}
+参数个数：比原先操作数少一个，自增自减除外
+2.重载为非成员函数
+返回类型 operator 运算符(形参表)
+{函数体}
+参数个数：和原先一样
+
+重载为成员函数
+1.双目运算符B
+为了实现op1 B op2:把B重载为类的成员函数，形参为op2目的对象为op1
+最后表达式：op1.operator B(op2)
+------------------------------------------------------------
+class Complex
+{
+    public:
+        Complex(double r = 0.0, double i = 0.0) : real(r), imag(i) {}
+        Complex operator+(const Complex& other) const
+        {
+            return Complex(real + other.real, imag + other.imag);
+        }
+        Complex operator-(const Complex& other) const
+        {
+            return Complex(real - other.real, imag - other.imag);
+        }
+        void display() const
+        {
+            cout << real << " + " << imag << "i" << endl;
+        }
+    private:
+        double real;
+        double imag;    
+};
+int main()
+{
+    Complex c1(3.0, 2.0);
+    Complex c2(1.0, 7.0);
+    
+    Complex sum = c1 + c2;
+    Complex difference = c1 - c2;
+    
+    cout << "Sum: ";
+    sum.display();
+   
+    cout << "Difference: ";
+    difference.display();
+    
+    return 0;
+} 
+------------------------------------------------------------
+Sum: 4 + 9i
+Difference: 2 + -5i
+2.前置单目运算符U
+为了实现U op：把U重载为成员函数，没有形参op为目的对象
+最后表达式：op.operator U( )
+3.前置自增自减和后置自增自减
+前置：先加减再输出：先进行运算再return *this
+后置：先输出再加减：Clock old=*this
+				  ++(*this)//调用前置自增
+			      	  return old
+
+重载为类的非成员函数
+1.双目运算符B
+要实现op1 B op2：其中只要有一个op是自定义类型就可以将B重载为非成员函数
+最后表达式：operator B(op1，op2)
+2.单目运算符U
+要实现U op：只要op为自定义类型就可以把U重载为类非成员函数
+最后表达式 operator U(op)
+3.自增自减：operator ++(op,0)//第二个int用于区分前置和后置
+4.重载流输出左移运算符
+ostream & operator<<(ostream &out,Complex &c)
+{out<<.........;
+return out}//这个return out是为了实现链式编程
+
+虚函数：运行中的多态函数调用的多态性，关于到底调用哪个函数的问题
+语法：virtual 返回值类型 函数名(参数表)
+虚函数声明只能出现在类定义的函数原型声明中，不能出现在实现的时候
+三个条件：1.满足赋值兼容规则
+                 2.声明虚函数
+                 3.由成员函数调用或通过指针引用访问
+如果在指针调用成员函数的同时用作用域限定符确定了作用域，则会调用到对应作用域的函数
+在虚函数尾的overide和final：表示重写虚函数和禁止重写
+虚析构函数
+基类如果有虚析构函数，其所有派生类均为虚析构函数
+如果有可能通过基类指针调用对象的析构函数则基类的析构函数要声明为虚析构函数
+语法：virtual ~Base( )
+
+纯虚函数与抽象类
+纯虚函数
+virtual 返回值类型 函数名(参数表)=0//基类中可以不再给出函数的实现部分，在派生类中实现
+抽象类：带有纯虚函数的类是抽象类，抽象类自身无法实例化
+抽象类的主要作用就是在类的上层建立一个公共接口，使类族能更好的发挥多态性
+派生类给出了所有纯虚函数的实现就不再是抽象类，否则依旧是抽象类

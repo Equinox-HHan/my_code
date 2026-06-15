@@ -1,0 +1,171 @@
+1.基类与派生类
+定义：class Derived: 继承方式 BaseClass1,继承方式 BaseClass2......
+同名隐藏：派生类和基类有同名函数，通过函数名访问派生类的函数
+2.访问控制
+public公有继承：基类的公有和保护成员在派生类中访问控制属性不变，基类私有成员不可直接访问
+private私有继承：基类的公有和保护成员在派生类中转换为私有成员，基类私有成员不可直接访问
+protected保护继承：基类的公有和保护成员在派生类中转换为保护成员，基类私有成员不可直接访问
+类型兼容规则：
+在需要基类对象的地方可以使用公有派生类对象替代
+1.派生类对象隐式转化为基类对象，用基类公有继承的成员为基类对象赋值
+2.派生类对象可以初始化基类对象的引用
+3.派生类对象的地址可以隐式转化为指向基类的指针
+
+
+派生类的构造和析构函数
+1.构造函数
+构造派生类的对象时，就要对基类的成员对象和新增的成员对象初始化
+要调用基类带有形参表的构造函数就必须为派生类写构造函数
+语法：派生类名::派生类名(参数表)：基类名1(初始化参数表).......成员对象名1(初始化参数表).......
+{派生类构造函数的函数体}
+顺序1.基类构造函数，按照继承声明顺序
+       2.派生类新增成员初始化，按照派生类中声明顺序
+       3.派生类构造函数体
+class Derived : public Base
+{public:
+	using Base::Base{ }}     //继承Base的构造函数
+2.复制构造函数
+Derived::Derived(const Derived &v) : Base(v){......}          //向上兼容规则使得派生类引用对象能作为基类引用对象
+3.析构函数 
+与一般的析构函数定义方式一样，执行顺序与构造过程完全相反
+
+派生类成员的标识与访问
+1.二义性问题
+可见性原则：具有包含关系的作用域：若外层声明A内层没声明，则内层可见A
+							  若外层和内层都声明了A，则只能看见内层的A，这被称为隐藏规则
+如果派生类声明了和基类同名的函数，从基类继承的同名函数任何重载形式都会被隐藏
+1.平行基类声明了A,派生类中有A: 对象.成员或者对象指针->成员只能访问到派生类的A
+2.平行基类声明了A,派生类中没A: Derived d,  Derived *ptr=&d
+						   d.Base1::func( )   p->Base2::func( )    //使用作用域分辨符
+派生类的多级继承：也必须使用作用域限定符，并且必须使用直接基类限定而不是底层基类
+---------------------------------------------------------------------------
+class Base0
+{
+    public:
+        int number0;
+        void func()
+        {
+            cout<<"Base0 func called"<<endl;
+        }
+};
+class Base1:public Base0
+{
+    public:
+        int number1;
+};
+class Base2:public Base0
+{
+    public:
+        int number2;
+};
+class Derived:public Base1,public Base2
+{
+    public:
+        int derivedNumber;
+        void func()
+        {
+            cout<<"Derived func called"<<endl;
+        }
+};
+int main()
+{
+    Derived obj;
+    //obj.func(); // Ambiguity Error
+    obj.Base1::func(); // To resolve ambiguity we have to specify the class name
+    obj.Base2::func(); // To resolve ambiguity we have to specify the class name
+    obj.derivedNumber=10;
+    obj.number1=20;
+    obj.number2=30;
+    cout<<"Derived Number: "<<obj.derivedNumber<<endl;
+    cout<<"Base1 Number: "<<obj.number1<<endl;
+    cout<<"Base2 Number: "<<obj.number2<<endl;
+    return 0;
+}
+---------------------------------------------------------------------------
+Base0 func called
+Base0 func called
+Derived Number: 10
+Base1 Number: 20
+Base2 Number: 30
+---------------------------------------------------------------------------
+虚基类
+语法：class 派生类名：virtual 继承方式 基类名
+将共同基类设置为虚基类，从不同路径继承的同名函数在内存中只存在一个
+class Base0
+{
+    public:
+        void show() { cout << "Base0\n"; }
+};
+class Base1:virtual public Base0
+{
+    public:
+        int number1;
+};
+class Base2:virtual public Base0
+{
+    public:
+        int number2;
+};
+class Derived:public Base1,public Base2
+{
+    public:
+        void show1() { cout << "Derived\n"; }
+};
+int main()
+{
+    Derived d;
+    d.show();  // Ambiguity resolved due to virtual inheritance
+    d.show1();
+    return 0;
+}
+---------------------------------------------------------------------------
+Base0
+Derived
+其实相较于前者的非虚基类多级继承，区别在于前者的同名函数有多个副本，后者只有唯一映射
+虚基类及其派生类的构造函数
+当最底层基类有含参数构造函数并且在继承的时候被声明为virtual就要写构造函数
+class Base0
+{
+    public:
+        Base0(int number)
+        {
+            int num=number;
+        }
+        int num;
+};
+class Base1:virtual public Base0
+{
+    public:
+        Base1(int number):Base0(number)
+        {
+            cout<<"Base1 Constructor Called"<<endl;
+        }
+};
+class Base2:virtual public Base0
+{
+    public:
+        Base2(int number):Base0(number)
+        {
+            cout<<"Base2 Constructor Called"<<endl;
+        }
+};
+class Derived:public Base1,public Base2
+{
+    public:
+        Derived(int number):Base0(number),Base1(number),Base2(number)
+        {
+            cout<<"Derived Constructor Called"<<endl;
+        }
+};
+int main()
+{
+    Derived obj(10);
+    return 0;
+}
+---------------------------------------------------------------------------
+Base1 Constructor Called
+Base2 Constructor Called
+Derived Constructor Called
+
+
+

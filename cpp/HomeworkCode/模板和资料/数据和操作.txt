@@ -1,0 +1,447 @@
+常量
+1：#define 常量名称 常量值：#define Day 7
+2：const 数据类型 变量名=常量值  ：const double pi=3.14
+
+标识符命名规则
+1：不能由数字起头
+2：区分大小写
+3：变量名不能是关键字
+
+sizeof关键字
+作用：利用sizeof关键字统计数据类型所占用的内存大小
+语法：sizeof（数据类型）/sizeof（变量名）
+
+数据类型
+1：浮点型
+-----单精度：float（通常都会在浮点数后加f，否则默认为double类型）4字节
+-----双精度：double  8字节
+在默认情况下输出一个浮点数，会显示出6位有效数字
+--------------------------------------------------------------------------------
+    double num = 123.456789;
+    cout << "默认精度: " << num << endl;
+    // 设置精度为5（总位数）
+    cout.precision(5);
+    cout << "精度5: " << num << endl;
+    // 使用fixed后，精度表示小数位数
+    cout << fixed;
+    cout.precision(2);
+    cout << "fixed+精度2: " << num << endl;
+    // 恢复默认
+    cout << defaultfloat;
+    cout.precision(6);  // 默认精度
+输出##################################################
+ 	默认精度: 123.457
+ 	精度5: 123.46
+ 	fixed+精度2: 123.46
+--------------------------------------------------------------------------------
+    double num = 123.456;
+    // fixed: 固定小数格式
+    cout << fixed;
+    cout << "fixed格式: " << num << endl;
+    // scientific: 科学计数法
+    cout << scientific;
+    cout << "scientific格式: " << num << endl;
+    // defaultfloat: 默认格式（自动选择）
+    cout << defaultfloat;
+    cout << "defaultfloat格式: " << num << endl;
+    // showpoint: 总是显示小数点
+    cout << showpoint;
+    cout << "showpoint: " << 100.0 << endl;
+    cout << noshowpoint;  // 取消
+    // showpos: 显示正数的+
+    cout << showpos;
+    cout << "showpos: " << num << endl;
+    cout << noshowpos;  // 取消
+输出##################################################
+ 	  FIXED格式: 123.456000
+ 	scientific格式: 1.234560e+02
+ 	defaultfloat格式: 123.456
+ 	showpoint: 100
+ 	showpos: +123.456
+--------------------------------------------------------------------------------
+    double nums[] = {12.34, 123.456, 1.2};
+    // 设置宽度为10，右对齐（默认）
+    for(double num : nums) {
+        cout << setw(10) << num << endl;
+    }
+    // 左对齐
+    cout << left;
+    for(double num : nums) {
+        cout << setw(10) << num << endl;
+    }
+    cout << right;  // 恢复右对齐
+    // 内部对齐（符号左对齐，数字右对齐）
+    cout << internal;
+    cout << setw(10) << -12.34 << endl;
+输出##################################################
+       12.34
+   123.456
+           1.2
+12.34
+123.456
+1.2
+-      12.34
+--------------------------------------------------------------------------------
+     double num = 123.45;
+    // 设置宽度为15，用*填充
+    cout << setfill('*') << setw(15) << num << endl;
+    // 左对齐填充
+    cout << left << setw(15) << num << endl;
+    // 恢复空格填充
+    cout << setfill(' ');
+输出##################################################
+*********123.45
+123.45*********
+--------------------------------------------------------------------------------
+
+
+
+2：字符型
+------char 变量名='常量值'
+char类型只占用一个字节
+char并不存储字符，而是存储对应的ASCll编码
+--------------------------------------------------------------------------------
+     char ch = 'A';
+    // 检查字符类型
+    cout << "isalpha('A'): " << isalpha(ch) << endl;     // 字母
+    cout << "isdigit('A'): " << isdigit(ch) << endl;     // 数字
+    cout << "isalnum('A'): " << isalnum(ch) << endl;     // 字母或数字
+    cout << "islower('A'): " << islower(ch) << endl;     // 小写字母
+    cout << "isupper('A'): " << isupper(ch) << endl;     // 大写字母
+    cout << "isspace(' '): " << isspace(' ') << endl;    // 空白字符
+    cout << "ispunct('!'): " << ispunct('!') << endl;    // 标点符号
+    cout << "isxdigit('A'): " << isxdigit('A') << endl;  // 十六进制数字
+    // 实用示例：统计字符串中各种字符类型
+    char str[] = "Hello World 123!";
+    int letters = 0, digits = 0, spaces = 0, others = 0;
+    
+    for(int i = 0; str[i] != '\0'; i++) {
+        if(isalpha(str[i])) letters++;
+        else if(isdigit(str[i])) digits++;
+        else if(isspace(str[i])) spaces++;
+        else others++;
+    }
+    cout << "\n字符串分析: " << str << endl;
+    cout << "字母: " << letters << endl;
+    cout << "数字: " << digits << endl;
+    cout << "空格: " << spaces << endl;
+    cout << "其他: " << others << endl;
+输出##################################################
+	isalpha('A'): 1
+	isdigit('A'): 0
+	isalnum('A'): 1
+	islower('A'): 0
+	isupper('A'): 1
+	isspace(' '): 8
+	ispunct('!'): 16
+	isxdigit('A'): 128
+	字符串分析: Hello World 123!
+	字母: 10
+	数字: 3
+	空格: 2
+	其他: 1
+--------------------------------------------------------------------------------
+    // 大小写转换
+    char lower = 'a';
+    char upper = 'Z';
+    cout << "toupper('a'): " << (char)toupper(lower) << endl;
+    cout << "tolower('Z'): " << (char)tolower(upper) << endl;
+    // 转换为大写
+    cout << "转换为大写: ";
+    for(int i = 0; str[i] != '\0'; i++) {
+        cout << (char)toupper(str[i]);
+    }
+    cout << endl；
+    // 转换为小写
+    cout << "转换为小写: ";
+    for(int i = 0; str[i] != '\0'; i++) {
+        cout << (char)tolower(str[i]);
+    }
+    cout << endl;
+--------------------------------------------------------------------------------
+    // char 转 int
+    char digit = '5';
+    int num = digit - '0';  // 常用方法
+    cout << "char '5' 转 int: " << num << endl;
+    // int 转 char
+    int value = 7;
+    char ch = value + '0';
+    cout << "int 7 转 char: " << ch << endl;
+    // 使用stringstream转换
+    char c = '9';
+    stringstream ss;
+    ss << c;
+    int n;
+    ss >> n;
+    cout << "使用stringstream转换: " << n << endl;
+    // ASCII码操作
+    char letter = 'A';									char letter='A'			输出
+    cout << "\nASCII码操作示例:\n";						cout<<letter;			A
+    cout << "字符: " << letter << endl;					cout<<(int)letter;		65
+    cout << "ASCII码: " << (int)letter << endl;			cout<<(char)(letter+1);	B
+    cout << "下一个字符: " << (char)(letter + 1) << endl;	cout<<letter+1		66
+    cout << "前一个字符: " << (char)(letter - 1) << endl;		cout<<letter-'0'		17(0的ASCll是48，A的是65，65-48=17)
+    // 字符加密示例（凯撒密码）						cout<<(char)(letter-'0');	 无输出
+    char plaintext[] = "HELLO";							(ASCll的17没有对应的输出值,该方法正常是输出ASCll对应的字符)
+    int shift = 3;
+    cout << "\n凯撒加密(偏移" << shift << "): ";
+    for(int i = 0; plaintext[i] != '\0'; i++) {
+        char encrypted = plaintext[i] + shift;
+        cout << encrypted;
+    }
+    cout << endl;
+输出##################################################
+	char '5' 转 int: 5
+	int 7 转 char: 7
+	使用stringstream转换: 9
+	ASCII码操作示例:
+	字符: A
+	ASCII码: 65
+	下一个字符: B
+	前一个字符: @
+	凯撒加密(偏移3): KHOOR
+--------------------------------------------------------------------------------
+
+
+
+3：string类
+语法：string 变量名=常量
+--------------------------------------------------------------------------------
+    string str;
+    // 1. 使用cin输入（遇到空格停止）
+    cout << "请输入一个单词: ";
+    cin >> str;
+    cout << "你输入的单词: " << str << endl;
+    // 清空输入缓冲区
+    cin.ignore(100, '\n');
+    // 2. 使用getline输入整行
+    cout << "\n请输入一行文本: ";
+    getline(cin, str);  // 读取整行，包括空格
+    cout << "整行输入: " << str << endl;
+    // 3. 指定分隔符
+    cout << "\n请输入用逗号分隔的数据: ";
+    getline(cin, str, ',');  // 遇到逗号停止
+    cout << "逗号前的内容: " << str << endl;
+    cin.get();
+    // 4. 混合使用cin和getline时的注意事项
+    int number;
+    cout << "\n请输入一个数字: ";
+    cin.get();
+    cin >> number;
+    cin.ignore();  // 清除换行符
+    cout << "请输入字符串: ";
+    getline(cin, str);
+    cout << "数字: " << number << ", 字符串: " << str << endl;
+    // 5. 使用printf输出string（需要c_str()）
+    printf("\n使用printf输出: %s\n", str.c_str());
+输出##################################################
+请输入一个单词: world
+你输入的单词: world
+
+请输入一行文本: i love u
+整行输入: i love u
+
+请输入用逗号分隔的数据: i love,u
+逗号前的内容: i love
+
+请输入一个数字: 21
+请输入字符串: hello world
+数字: 21, 字符串: hello world
+
+使用printf输出: hello world
+--------------------------------------------------------------------------------
+    string str = "Hello World";
+    string str2 = "C++ Programming";
+    
+    // 1. 长度和容量
+    cout << "字符串: " << str << endl;
+    cout << "长度: " << str.length() << endl;      // 或 str.size()
+    cout << "是否为空: " << (str.empty() ? "是" : "否") << endl;
+    cout << "容量: " << str.capacity() << endl;
+    // 2. 访问字符
+    cout << "\n字符访问:" << endl;
+    cout << "第一个字符: " << str[0] << endl;           // 数组下标
+    cout << "第二个字符: " << str.at(1) << endl;        // at()方法
+    cout << "最后一个字符: " << str.back() << endl;     // C++11
+    cout << "第一个字符: " << str.front() << endl;      // C++11  
+    // 3. 修改字符串
+    str[0] = 'h';  // 修改字符
+    cout << "\n修改后: " << str << endl;
+    // 4. 字符串连接
+    string combined = str + " " + str2;
+    cout << "连接后: " << combined << endl;   
+    // 使用append
+    str.append("!!!");
+    cout << "append后: " << str << endl;    
+    // 5. 字符串比较
+    string a = "apple";
+    string b = "banana";    
+    cout << "\n比较操作:" << endl;
+    if(a == b) cout << "a == b" << endl;
+    if(a != b) cout << "a != b" << endl;
+    if(a < b)  cout << "a < b" << endl;
+    if(a > b)  cout << "a > b" << endl;
+    if(a <= b) cout << "a <= b" << endl;
+    if(a >= b) cout << "a >= b" << endl;   
+    // 6. 子串操作
+    string sub = str.substr(6, 5);  // 从位置6开始，取5个字符
+    cout << "\n子串(6,5): " << sub << endl；    
+    // 7. 查找操作
+    size_t pos = str.find("World");
+    if(pos != string::npos) {
+        cout << "找到'World'在位置: " << pos << endl;
+    }
+    // 查找字符
+    pos = str.find_first_of("aeiou");  // 找第一个元音字母
+    cout << "第一个元音字母位置: " << pos << endl;
+    // 从后往前找
+    pos = str.find_last_of("o");
+    cout << "最后一个'o'的位置: " << pos << endl;
+输出##################################################
+字符串: Hello World
+长度: 11
+是否为空: 否
+容量: 15
+
+字符访问:
+第一个字符: H
+第二个字符: e
+最后一个字符: d
+第一个字符: H
+
+修改后: hello World
+连接后: hello World C++ Programming
+append后: hello World!!!
+
+比较操作:
+a != b
+a < b
+a <= b
+
+子串(6,5): World
+找到'World'在位置: 6
+第一个元音字母位置: 1
+最后一个'o'的位置: 7
+--------------------------------------------------------------------------------
+
+    string str = "Hello World";
+    // 1. 插入
+    str.insert(5, " Beautiful");  // 在位置5插入
+    cout << "插入后: " << str << endl;
+    // 2. 删除
+    str.erase(5, 10);  // 从位置5开始删除10个字符
+    cout << "删除后: " << str << endl;
+    // 删除单个字符
+    str.erase(str.begin() + 5);  // 删除位置5的字符
+    cout << "删除位置5后: " << str << endl;
+    // 3. 替换
+    str.replace(6, 5, "C++");  // 从位置6开始替换5个字符
+    cout << "替换后: " << str << endl;
+    // 4. 清空
+    string temp = str;
+    temp.clear();
+    cout << "清空后长度: " << temp.length() << endl;
+    // 5. 大小写转换
+    string text = "Hello World";
+    // 转换为大写
+    transform(text.begin(), text.end(), text.begin(), ::toupper);
+    cout << "大写: " << text << endl;
+    // 转换为小写
+    transform(text.begin(), text.end(), text.begin(), ::tolower);
+    cout << "小写: " << text << endl;
+    // 6. 去除空格
+    string withSpaces = "   Hello World   ";
+    // 去除左边空格
+    size_t start = withSpaces.find_first_not_of(" ");
+    withSpaces = (start == string::npos) ? "" : withSpaces.substr(start);
+    cout << "去除左空格: \"" << withSpaces << "\"" << endl;
+    // 去除右边空格
+    size_t end = withSpaces.find_last_not_of(" ");
+    withSpaces = (end == string::npos) ? "" : withSpaces.substr(0, end + 1);
+    cout << "去除右空格: \"" << withSpaces << "\"" << endl;
+输出##################################################
+插入后: Hello Beautiful World
+删除后: Hello World
+删除位置5后: HelloWorld
+替换后: HelloWC++
+清空后长度: 0
+大写: HELLO WORLD
+小写: hello world
+去除左空格: "Hello World   "
+去除右空格: "Hello World"
+--------------------------------------------------------------------------------
+    // 1. 使用stringstream转换
+    // 字符串转数值
+    string numStr = "123.45";
+    stringstream ss(numStr);
+    double num;
+    ss >> num;
+    cout << "字符串转double: " << num * 2 << endl;
+    
+    // 数值转字符串
+    stringstream ss2;
+    int value = 456;
+    ss2 << value;
+    string result = ss2.str();
+    cout << "int转string: " << result << endl;
+    
+    // 2. C++11的to_string和stoi系列函数
+    // 数值转字符串
+    int i = 42;
+    double d = 3.14159;
+    
+    string s1 = to_string(i);  // 整数转字符串
+    string s2 = to_string(d);  // 浮点数转字符串
+    cout << "\nto_string转换:" << endl;
+    cout << "整数: " << s1 << endl;
+    cout << "浮点数: " << s2 << endl;
+    
+    // 字符串转数值
+    string intStr = "123";
+    string floatStr = "45.67";
+    
+    int intVal = stoi(intStr);          // string to int
+    long longVal = stol(intStr);        // string to long
+    float floatVal = stof(floatStr);    // string to float
+    double doubleVal = stod(floatStr);  // string to double
+    
+    cout << "\n字符串转数值:" << endl;
+    cout << "stoi: " << intVal << endl;
+    cout << "stol: " << longVal << endl;
+    cout << "stof: " << floatVal << endl;
+    cout << "stod: " << doubleVal << endl;
+    
+    // 3. 进制转换
+    string hexStr = "FF";
+    string binStr = "1010";
+    
+    int hexVal = stoi(hexStr, nullptr, 16);  // 16进制
+    int binVal = stoi(binStr, nullptr, 2);   // 2进制
+    
+    cout << "\n进制转换:" << endl;
+    cout << "16进制FF转10进制: " << hexVal << endl;
+    cout << "2进制1010转10进制: " << binVal << endl;
+    
+    // 10进制转16进制字符串
+    stringstream hexSS;
+    hexSS << hex << 255;
+    cout << "255转16进制: 0x" << hexSS.str() << endl;
+输出##################################################
+字符串转double: 246.9
+int转string: 456
+
+to_string转换:
+整数: 42
+浮点数: 3.141590
+
+字符串转数值:
+stoi: 123
+stol: 123
+stof: 45.67
+stod: 45.67
+
+进制转换:
+16进制FF转10进制: 255
+2进制1010转10进制: 10
+255转16进制: 0xff
+--------------------------------------------------------------------------------

@@ -1,0 +1,41 @@
+{
+    "folders": [
+        {
+            "name": "⚙️ C++ (DSA & ZOJ)",
+            "path": "cpp"
+        },
+        {
+            "name": "🐍 Python",
+            "path": "python"
+        },
+        {
+            "name": "🤖 AI Project",
+            "path": "ai-project"
+        },
+        {
+            "name": "📜 Scripts",
+            "path": "scripts"
+        }
+    ],
+    "settings": {
+        // ==========================================
+        // 全局工作区设置（所有子文件夹继承）
+        // 各语言的专属配置位于对应文件夹的 .vscode/ 中
+        // ==========================================
+        "editor.formatOnSave": true,
+        "files.exclude": {
+            "**/.git": true,
+            "**/__pycache__": true
+        },
+
+        // 关闭内联建议（ghost text），避免与 agent 插件补全冲突
+        "editor.inlineSuggest.enabled": false,
+
+        // 开启快速建议（下拉补全列表）
+        "editor.quickSuggestions": {
+            "other": "on",
+            "comments": "on",
+            "strings": "on"
+        }
+    }
+}

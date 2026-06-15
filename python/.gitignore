@@ -1,0 +1,32 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+.venv/
+venv/
+.ipynb_checkpoints/
+
+# Conda
+.conda/
+
+# IDE
+.vscode/ipch/
+.vscode/bin/
+.idea/
+
+# OS
+.DS_Store
+*.log
+
+# API keys & secrets
+.env
+.env.*
+!.env.example
+credentials*.json
+service-account*.json
+
+# aider (AI coding assistant)
+.aider/
+.aider*
+aider.conf.yml
+aider.local.yml
