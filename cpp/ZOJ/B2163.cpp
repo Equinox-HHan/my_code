@@ -10,7 +10,7 @@ void func(int dr,int dc,int tr,int tc,int s)
         return;
     }
     int n=number++;
-    int s=s/2;
+    s=s/2;
     if(dr<tr+s&&dc<tc+s)
     {
         func(dr,dc,tr,tc,s);
