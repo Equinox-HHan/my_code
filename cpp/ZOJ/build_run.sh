@@ -1,35 +1,37 @@
 #!/bin/bash
 # =============================================================================
 # C++ Build & Run Script for ZOJ problems
-# Fixes the Anaconda/MSYS2 PATH conflict by removing Anaconda before build/run.
 #
 # Usage:
 #   ./build_run.sh Zoj1004.cpp              # compile + run (interactive)
 #   ./build_run.sh Zoj1004.cpp < input.txt   # compile + run with input file
 #   ./build_run.sh --build-only Zoj1004.cpp  # compile only, don't run
 #   ./build_run.sh --clean                   # remove all built .exe files
+#
+# Environment: removes Anaconda's old GCC 5.3.0 mingw-w64 DLL path (the
+#   only Anaconda entry that conflicts with MSYS2 UCRT64 GCC 15.2.0),
+#   then puts MSYS2 at the front. Python still works fine.
 # =============================================================================
 
 set -e
 
-# Remove Anaconda from PATH to avoid DLL conflicts
-clean_path() {
-    local new_path=""
-    local IFS_SAVED="$IFS"
-    IFS=':'
-    for dir in $PATH; do
-        case "$dir" in
-            *anaconda*|*conda*|*Anaconda*|*Conda*) ;;
-            *) new_path="${new_path}:${dir}" ;;
-        esac
-    done
-    IFS="$IFS_SAVED"
-    export PATH="${new_path#:}"
+SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
+
+# --- 只删除 Anaconda 的老 GCC 5.3.0 DLL 路径 ---
+# 不删 Anaconda Python — 很多脚本可能需要 python
+fix_path() {
+    export PATH=$(printf '%s' "$PATH" | awk -v RS=':' '
+        /anaconda3\/Library\/mingw-w64\/bin/ { next }
+        /anaconda3\/Library\/usr\/bin/        { next }
+        !seen[$0]++ { printf "%s%s", sep, $0; sep=":" }
+        END { printf "\n" }
+    ')
+    export PATH="/d/mys64/ucrt64/bin:/d/mys64/usr/bin:$PATH"
+    export PATH=$(printf '%s' "$PATH" | awk -v RS=':' '!seen[$0]++ { printf "%s%s", sep, $0; sep=":" } END { printf "\n" }')
 }
 
-clean_path
+fix_path
 
-SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 BUILD_ONLY=false
 
 case "${1:-}" in
@@ -49,9 +51,6 @@ case "${1:-}" in
         echo "  file.cpp        Compile and run the specified C++ file"
         echo "  --build-only    Compile only, skip running"
         echo "  --clean         Remove all *.exe and *.o files"
-        echo ""
-        echo "Environment: Anaconda paths are automatically removed from PATH"
-        echo "             to prevent DLL conflicts with MSYS2 UCRT64 g++."
         exit 0
         ;;
 esac
